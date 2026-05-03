@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickBook.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,15 @@ namespace QuickBook.Domain.Entities.Accounting
     {
         public Guid Id { get; private set;}
         public string Name { get; private set;} = string.Empty;
-        public string Type { get; private set; } = string.Empty;
+        public AccountType AccountType { get; private set;}
         public DateTime CreatedAt { get; private set; }
 
         private Account() { }
-        public Account(string name, string type)
+        public Account(string name)
         {
             Id = Guid.NewGuid();
             Name = name;
-            Type = type;
+           AccountType = AccountType.Asset;
             CreatedAt = DateTime.UtcNow;
         }
     }

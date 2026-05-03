@@ -19,6 +19,14 @@ namespace QuickBook.Domain.Entities.Operational
 
         public InvoiceItem(Guid invoiceId, Guid productId, decimal unitPrice, decimal totalPrice, int quantity)
         {
+            if (invoiceId == Guid.Empty)
+                throw new ArgumentException("InvoiceId is required.", nameof(invoiceId));
+            if(unitPrice < 0)
+                throw new ArgumentException("UnitPrice cannot be negative.", nameof(unitPrice));
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId is required.", nameof(productId));
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
             Id = Guid.NewGuid();
            InvoiceId = invoiceId;
            ProductId = productId;

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace QuickBook.Domain.Enums
 {
-    public enum InvoiceStatus
+    public enum AccountType
     {
-        Draft,
-        Paid,
-        PartiallyPaid
+        Asset,
+        Liability,
+        Income,
+        Expense,
     }
 }

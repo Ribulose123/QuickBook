@@ -12,18 +12,26 @@ namespace QuickBook.Domain.Entities.Operational
         public string Description { get; private set; } = string.Empty;
         public decimal Amount { get; private set; }
         public DateTime Date { get; private set; }
-        public string Category { get; private set; } = string.Empty;
-        public string PaymentMethod { get; private set; } = string.Empty;
+        public Guid CategoryId { get; private set; } 
+        public Guid PaymentMethodId { get; private set; } 
 
         private Expense() { }
-        public Expense(string description, decimal amount, string category, string paymentMethod)
+        public Expense(string description, decimal amount, Guid categoryId, Guid paymentMethodId)
         {
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Description is required.", nameof(description));
+            if (amount <= 0)
+                throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
+            if (categoryId == Guid.Empty)
+                throw new ArgumentException("CategoryId is required.", nameof(categoryId));
+            if (paymentMethodId == Guid.Empty)
+                throw new ArgumentException("PaymentMethodId is required.", nameof(paymentMethodId));
             Id = Guid.NewGuid();
             Description = description;
             Amount = amount;
             Date = DateTime.UtcNow;
-            Category = category;
-            PaymentMethod = paymentMethod;
+            CategoryId = categoryId;
+            PaymentMethodId = paymentMethodId;
         }
     }
 }
