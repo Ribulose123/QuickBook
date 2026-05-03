@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="QuickBook/QuickBook.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="QuickBook.Domain/QuickBook.Domain.csproj" />
+  </Folder>
+</Solution>
