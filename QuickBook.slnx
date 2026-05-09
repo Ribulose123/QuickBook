@@ -2,7 +2,13 @@
   <Folder Name="/API/">
     <Project Path="QuickBook/QuickBook.csproj" />
   </Folder>
+  <Folder Name="/Application/">
+    <Project Path="QuickBook.Application/QuickBook.Application.csproj" Id="cd221fcf-cf73-481f-8143-4df8fdbac54e" />
+  </Folder>
   <Folder Name="/Core/">
     <Project Path="QuickBook.Domain/QuickBook.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="QuickBook.Persistence/QuickBook.Persistence.csproj" Id="5f3ab283-71af-4c5f-a24f-45a78e97858c" />
   </Folder>
 </Solution>
