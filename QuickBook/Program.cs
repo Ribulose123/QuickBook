@@ -1,9 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using QuickBook.Application.Interface;
+using QuickBook.Application.Services;
+using QuickBook.Domain.Interface;
 using QuickBook.Persistence;
+using QuickBook.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerServices, CustomerServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QuickBook.Application\QuickBook.Application.csproj" />
     <ProjectReference Include="..\QuickBook.Domain\QuickBook.Domain.csproj" />
     <ProjectReference Include="..\QuickBook.Persistence\QuickBook.Persistence.csproj" />
   </ItemGroup>

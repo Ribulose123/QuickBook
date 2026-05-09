@@ -8,7 +8,7 @@ namespace QuickBook.Domain.Entities.Operational
 {
     public class Customer
     {
-        public Guid id { get; private set; }
+        public Guid Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
         public string Phone { get; private set; } = string.Empty;
@@ -19,12 +19,23 @@ namespace QuickBook.Domain.Entities.Operational
 
         public Customer(string name, string email, string phone, string address)
         {
-            id = Guid.NewGuid();
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             Phone = phone;
             Address = address;
             CreatedAt = DateTime.UtcNow;
+        }
+
+        public void Update(string name, string email, string phone, string address)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name is required.", nameof(name));
+
+            Name = name;
+            Email = email;
+            Phone = phone;
+            Address = address;
         }
     }
 }
