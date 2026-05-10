@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using System.Net;
+using System.Numerics;
 
 namespace QuickBook.Domain.Entities.Operational
 {
@@ -25,6 +24,17 @@ namespace QuickBook.Domain.Entities.Operational
             Quantity = quantity;
             Description = description;
             CreatedAt = DateTime.UtcNow;
+        }
+
+        public void Update(string name, decimal price, string description, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name is required.", nameof(name));
+
+            Name = name;
+            Price= price;
+            Quantity = quantity;
+            Description = description;
         }
     }
 }

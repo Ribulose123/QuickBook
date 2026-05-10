@@ -32,7 +32,7 @@ namespace QuickBook.Application.Services
             });
         }
 
-        public async Task<CustomerResponseDto> GetCustomerByIdAsync(Guid id)
+        public async Task<CustomerResponseDto?> GetCustomerByIdAsync(Guid id)
         {
             var customer = await _iCustomerRepo.GetByIdAsync(id);
             if (customer == null)

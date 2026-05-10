@@ -10,7 +10,7 @@ namespace QuickBook.Application.Interface
     public interface ICustomerServices
     {
         Task<IEnumerable<CustomerResponseDto>> GetAllCustomerAsync();
-        Task <CustomerResponseDto> GetCustomerByIdAsync(Guid id);
+        Task <CustomerResponseDto?> GetCustomerByIdAsync(Guid id);
         Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerDto createCustomerDto);
         Task UpdateCustomerAsync(Guid id, UpdateCustomerDto dto);
 
