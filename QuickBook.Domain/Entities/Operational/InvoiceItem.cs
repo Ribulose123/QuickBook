@@ -17,7 +17,7 @@ namespace QuickBook.Domain.Entities.Operational
 
         private InvoiceItem() { }
 
-        public InvoiceItem(Guid invoiceId, Guid productId, decimal unitPrice, decimal totalPrice, int quantity)
+        public InvoiceItem(Guid invoiceId, Guid productId, decimal unitPrice, int quantity)
         {
             if (invoiceId == Guid.Empty)
                 throw new ArgumentException("InvoiceId is required.", nameof(invoiceId));
@@ -32,7 +32,7 @@ namespace QuickBook.Domain.Entities.Operational
            ProductId = productId;
             Quantity = quantity;
             UnitPrice = unitPrice;
-            TotalPrice = totalPrice;
+            TotalPrice = unitPrice * quantity;
         }
     }
 }

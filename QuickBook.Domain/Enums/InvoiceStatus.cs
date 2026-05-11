@@ -9,7 +9,7 @@ namespace QuickBook.Domain.Enums
     public enum InvoiceStatus
     {
         Draft,
-        Paid,
-        PartiallyPaid
+        Sent,
+        Paid
     }
 }

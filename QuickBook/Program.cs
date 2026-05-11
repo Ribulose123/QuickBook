@@ -14,6 +14,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductServices>();
 builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodServices>();
+builder.Services.AddScoped<ICategoryRepository, CatergoryRepository>();
+builder.Services.AddScoped<ICategoryServices, CategoryServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,6 +24,9 @@ builder.Services.AddSwaggerGen();
 
 //Sqlite connection
 builder.Services.AddDbContext<QuickBookDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Convert Enum to string
+builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
 var app = builder.Build();
 

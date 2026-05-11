@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickBook.Persistence;
 
@@ -10,9 +11,11 @@ using QuickBook.Persistence;
 namespace QuickBook.Persistence.Migrations
 {
     [DbContext(typeof(QuickBookDbContext))]
-    partial class QuickBookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260511114953_CatergoryUpdate")]
+    partial class CatergoryUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.26");
@@ -173,10 +176,6 @@ namespace QuickBook.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("AmountPaid")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("TEXT");
 
@@ -248,8 +247,6 @@ namespace QuickBook.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
 
                     b.ToTable("Payments");
                 });
@@ -323,15 +320,6 @@ namespace QuickBook.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QuickBook.Domain.Entities.Operational.Payment", b =>
-                {
-                    b.HasOne("QuickBook.Domain.Entities.Operational.Invoice", null)
-                        .WithMany("Payments")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("QuickBook.Domain.Entities.Accounting.Transaction", b =>
                 {
                     b.Navigation("Lines");
@@ -340,8 +328,6 @@ namespace QuickBook.Persistence.Migrations
             modelBuilder.Entity("QuickBook.Domain.Entities.Operational.Invoice", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }
