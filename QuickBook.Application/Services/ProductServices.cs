@@ -72,6 +72,7 @@ namespace QuickBook.Application.Services
 
         private static ProductResponseDto MapToProductDto(Product product) => new()
         {
+            Id = product.Id,
             Name = product.Name,
             Price = product.Price,
             Quantity = product.Quantity,

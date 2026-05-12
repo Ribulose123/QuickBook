@@ -1,4 +1,5 @@
 ﻿using QuickBook.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuickBook.Domain.Entities.Operational
 {
@@ -12,7 +13,11 @@ namespace QuickBook.Domain.Entities.Operational
         public decimal AmountPaid { get; private set; }
         public decimal BalanceDue => TotalAmount - AmountPaid;
         public InvoiceStatus Status { get; private set; } = InvoiceStatus.Draft;
+
+        [BackingField(nameof(_items))] 
         public IReadOnlyCollection<InvoiceItem> Items => _items.AsReadOnly();
+
+        [BackingField(nameof(_payments))]
         public IReadOnlyCollection<Payment> Payments => _payments.AsReadOnly();
 
         private readonly List<InvoiceItem> _items = new();

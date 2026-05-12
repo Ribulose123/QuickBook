@@ -18,6 +18,7 @@ namespace QuickBook.Application.Dto.InvoiceDto
         public decimal AmountPaid { get;  set; }
         public decimal BalanceDue { get; set;  }
         public InvoiceStatus Status { get; set ; }
+        public List<InvoiceItemResponseDto> Items { get; set; } = new();
 
     }
 }

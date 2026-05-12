@@ -16,6 +16,8 @@ builder.Services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
 builder.Services.AddScoped<IPaymentMethodService, PaymentMethodServices>();
 builder.Services.AddScoped<ICategoryRepository, CatergoryRepository>();
 builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+builder.Services.AddScoped<IInvoiceRepository,InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceService, InvoiceServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

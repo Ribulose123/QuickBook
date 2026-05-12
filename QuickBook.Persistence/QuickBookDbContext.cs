@@ -23,6 +23,29 @@ namespace QuickBook.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Navigation(e => e.Items)
+                      .HasField("_items")
+                      .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+                entity.Navigation(e => e.Payments)
+                      .HasField("_payments")
+                      .UsePropertyAccessMode(PropertyAccessMode.Field); 
+
+                entity.HasMany(e => e.Items)
+                      .WithOne()
+                      .HasForeignKey(e => e.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(e => e.Payments)
+                      .WithOne()
+                      .HasForeignKey(e => e.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
         }
 
         public DbSet<Invoice> Invoices { get; set; }
