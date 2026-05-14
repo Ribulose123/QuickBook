@@ -35,23 +35,41 @@ namespace QuickBook.Persistence.Repositories
 
         public async Task UpdateAsync(Invoice invoice)
         {
-            foreach(var item in invoice.Items)
+           
+            _context.Entry(invoice).State = EntityState.Modified;
+
+            foreach (var item in invoice.Items)
             {
-                var entry = _context.Entry(item);
-                if (entry.State == EntityState.Detached)
-                    _context.InvoiceItems.Add(item);
-            }
-            foreach (var payment in invoice.Payments)
-            {
-                var entry = _context.Entry(payment);
-                if (entry.State == EntityState.Detached)
-                    _context.Payments.Add(payment);
+                var itemEntry = _context.Entry(item);
+                if (itemEntry.State == EntityState.Detached ||
+                    itemEntry.State == EntityState.Modified)
+                {
+                    var exists = await _context.InvoiceItems
+                        .AnyAsync(i => i.Id == item.Id);
+
+                    itemEntry.State = exists
+                        ? EntityState.Modified
+                        : EntityState.Added;
+                }
             }
 
+            foreach (var payment in invoice.Payments)
+            {
+                var paymentEntry = _context.Entry(payment);
+                if (paymentEntry.State == EntityState.Detached ||
+                    paymentEntry.State == EntityState.Modified)
+                {
+                    var exists = await _context.Payments
+                        .AnyAsync(p => p.Id == payment.Id);
+
+                    paymentEntry.State = exists
+                        ? EntityState.Modified
+                        : EntityState.Added;
+                }
+            }
 
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(Invoice invoice)
         {
             _context.Invoices.Remove(invoice);
