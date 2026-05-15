@@ -33,5 +33,13 @@ namespace QuickBook.Domain.Entities.Operational
             CategoryId = categoryId;
             PaymentMethodId = paymentMethodId;
         }
+
+        public void Update(string description, decimal amount, Guid categoryId, Guid paymentMethodId)
+        {
+            Description = description;
+            Amount = amount;
+            CategoryId = categoryId;
+            PaymentMethodId = paymentMethodId;
+        }
     }
 }

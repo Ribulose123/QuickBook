@@ -77,14 +77,10 @@ namespace QuickBook.Application.Services
             if (product == null)
                 throw new KeyNotFoundException($"Product with this {id} not found");
 
-            // Add these debug lines temporarily
-            Console.WriteLine($"Invoice Id: {invoice.Id}");
-            Console.WriteLine($"Product Id: {product.Id}");
-            Console.WriteLine($"Product Price: {product.Price}");
-            Console.WriteLine($"Quantity: {dto.Quantity}");
+           
 
             var createInvoiceItem = new InvoiceItem(invoice.Id, product.Id, product.Price, dto.Quantity);
-            Console.WriteLine($"InvoiceItem Id: {createInvoiceItem.Id}");
+            
             invoice.AddItem(createInvoiceItem);
             await _repository.UpdateAsync(invoice);
             var customer = await GetCustomerOrThrowError(invoice.CustomerId);
