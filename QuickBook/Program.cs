@@ -20,6 +20,8 @@ builder.Services.AddScoped<IInvoiceRepository,InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceService, InvoiceServices>();
 builder.Services.AddScoped<IExpensesRepository, ExpenseRepository>();
 builder.Services.AddScoped<IExpensesServices, ExpenseServices>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountService, AccountServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
