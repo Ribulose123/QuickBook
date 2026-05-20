@@ -53,6 +53,13 @@ namespace QuickBook.Application.Services
              await _categoryrepo.UpdateAsync(categoryUpdate);
             return MapToResponseDto(categoryUpdate);
         }
+        public async Task<CategoryResponseDto> LinkAccountAsync(Guid id, Guid accountId)
+        {
+            var category = await GetByIdOrThrowError(id);
+            category.LinkAccount(accountId);
+            await _categoryrepo.UpdateAsync(category);
+            return MapToResponseDto(category);
+        }
 
         public async Task DeleteCategoryAsync(Guid id)
         {
@@ -63,6 +70,7 @@ namespace QuickBook.Application.Services
         private static CategoryResponseDto MapToResponseDto(Category response) => new()
         {
             Id = response.Id,
+            AccountId = response.AccountId,
             Name = response.Name,
             Description = response.Description,
             AccountType = response.AccountType

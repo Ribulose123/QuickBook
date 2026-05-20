@@ -51,6 +51,13 @@ namespace QuickBook.Application.Services
 
             return MapToResponseDto(paymentMethod);
         }
+        public async Task<PaymentMethodResponseDto> LinkAccountAsync(Guid id, Guid accountId)
+        {
+            var paymentmethod = await GetProductOrThrowError(id);
+            paymentmethod.LinkAccount(accountId);
+            await _paymentMethodRepository.UpdateAsync(paymentmethod);
+            return MapToResponseDto(paymentmethod);
+        }
 
         public async Task DeletePaymentMethod(Guid id)
         {
@@ -61,6 +68,7 @@ namespace QuickBook.Application.Services
         private static PaymentMethodResponseDto MapToResponseDto(PaymentMethod response) => new()
         {
             Id = response.Id,
+            AccountId = response.AccountId,
             Name = response.Name,
             Description = response.Description,
         };

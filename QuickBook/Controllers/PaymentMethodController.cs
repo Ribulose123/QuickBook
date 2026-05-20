@@ -45,6 +45,13 @@ namespace QuickBook.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}/link-account")]
+        public async Task<IActionResult> LinkAccount(Guid id, [FromBody] Guid accountId)
+        {
+            var result = await _paymentMethodService.LinkAccountAsync(id, accountId);
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

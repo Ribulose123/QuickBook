@@ -8,6 +8,7 @@ namespace QuickBook.Domain.Entities.Operational
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public AccountType AccountType { get; private set; }
+        public Guid? AccountId { get; private set; }
 
         private Category() { }
 
@@ -30,6 +31,13 @@ namespace QuickBook.Domain.Entities.Operational
             Name = name;
             Description = description;
             AccountType = accountType;
+        }
+
+        public void LinkAccount(Guid accountId)
+        {
+            if (accountId == Guid.Empty)
+                throw new ArgumentException("AccountId is required.", nameof(accountId));
+            AccountId = accountId;
         }
     }
 }

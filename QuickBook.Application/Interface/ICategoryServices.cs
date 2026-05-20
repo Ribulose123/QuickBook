@@ -14,6 +14,7 @@ namespace QuickBook.Application.Interface
         Task<CategoryResponseDto> GetCategoryByIDAsync(Guid id);
         Task<CategoryResponseDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto);
         Task <CategoryResponseDto> UpdateCategoryAynsc (Guid id,  UpdateCategoryDto category);
+        Task<CategoryResponseDto> LinkAccountAsync(Guid id, Guid accountId);
         Task DeleteCategoryAsync(Guid id);
     }
 }

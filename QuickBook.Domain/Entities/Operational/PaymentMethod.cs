@@ -5,7 +5,7 @@
         public Guid Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
-        public Guid? AccountId { get; private set; }  // nullable until Account is built
+        public Guid AccountId { get; private set; }  
 
         private PaymentMethod() { }
 

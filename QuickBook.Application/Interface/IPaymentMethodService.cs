@@ -14,6 +14,7 @@ namespace QuickBook.Application.Interface
         Task <PaymentMethodResponseDto> GetByIdAsync(Guid id);
         Task<PaymentMethodResponseDto> CreatePaymentMethod( CreatePaymentMethodDto dto);
         Task<PaymentMethodResponseDto> UpdatePaymentMethod(Guid id, UpdatePaymentMethodDto dto);
+        Task<PaymentMethodResponseDto> LinkAccountAsync(Guid id, Guid accountId);
         Task DeletePaymentMethod(Guid id);
     }
 }
