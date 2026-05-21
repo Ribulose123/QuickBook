@@ -70,7 +70,7 @@ namespace QuickBook.Application.Services
             if (customer == null)
                 throw new KeyNotFoundException($"Customer with Id {id} not found.");
 
-            customer.Update(dto.Name, dto.Email, dto.Phone, dto.Address);
+            ApplyUpdate(customer, dto);
 
             await _iCustomerRepo.UpdateAsync(customer);
         }
@@ -83,6 +83,16 @@ namespace QuickBook.Application.Services
                 throw new KeyNotFoundException($"Customer with Id {id} not found.");
 
             await _iCustomerRepo.DeleteAsync(customer);
+        }
+
+        private void ApplyUpdate(Customer customer, UpdateCustomerDto dto)
+        {
+            string finalName = !string.IsNullOrEmpty(dto.Name) ? dto.Name : customer.Name;
+            string finalEmail = !string.IsNullOrEmpty(dto.Email) ? dto.Email : customer.Email;
+            string finalPhone = !string.IsNullOrEmpty(dto.Phone)? dto.Phone : customer.Phone;
+            string finalAddress = !string.IsNullOrEmpty(dto.Address) ? dto.Address : customer.Address;
+
+            customer.Update(finalName, finalEmail, finalPhone, finalAddress);
         }
     }
 }

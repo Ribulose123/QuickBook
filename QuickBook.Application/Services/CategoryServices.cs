@@ -1,6 +1,7 @@
 ﻿using QuickBook.Application.Dto.CategoryDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
+using QuickBook.Domain.Enums;
 using QuickBook.Domain.Interface;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace QuickBook.Application.Services
         public async Task<CategoryResponseDto> UpdateCategoryAynsc(Guid id, UpdateCategoryDto category)
         {
             var categoryUpdate = await GetByIdOrThrowError(id);
-            categoryUpdate.Update(category.Name, category.Description, category.AccountType);
+            ApplyUpdateChanges(categoryUpdate, category);
              await _categoryrepo.UpdateAsync(categoryUpdate);
             return MapToResponseDto(categoryUpdate);
         }
@@ -67,6 +68,15 @@ namespace QuickBook.Application.Services
             await _categoryrepo.DeleteAsync(categoryDelete);
         }
 
+        public void ApplyUpdateChanges(Category category, UpdateCategoryDto dto)
+        {
+            string finalname = !string.IsNullOrEmpty(dto.Name)?dto.Name : category.Name;
+            string finaldescription =!string.IsNullOrEmpty(dto.Description)? dto.Description : category.Description;
+            AccountType finalAccountType = dto.AccountType ?? category.AccountType;
+
+            category.Update(finalname, finaldescription, finalAccountType);
+
+        }
         private static CategoryResponseDto MapToResponseDto(Category response) => new()
         {
             Id = response.Id,

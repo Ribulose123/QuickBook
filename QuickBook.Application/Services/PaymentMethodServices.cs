@@ -46,7 +46,7 @@ namespace QuickBook.Application.Services
         public async Task<PaymentMethodResponseDto> UpdatePaymentMethod(Guid id, UpdatePaymentMethodDto dto)
         {
             var paymentMethod = await GetProductOrThrowError(id);
-            paymentMethod.Update(dto.Name, dto.Description);
+            ApplyUpdate(paymentMethod, dto);
             await _paymentMethodRepository.UpdateAsync(paymentMethod);
 
             return MapToResponseDto(paymentMethod);
@@ -63,6 +63,14 @@ namespace QuickBook.Application.Services
         {
             var paymentMethod = await GetProductOrThrowError(id);
             await _paymentMethodRepository.DeleteAsync(paymentMethod);
+        }
+
+        private void ApplyUpdate(PaymentMethod paymentMethod, UpdatePaymentMethodDto dto)
+        {
+            string finalName = !string.IsNullOrEmpty(dto.Name) ? dto.Name : paymentMethod.Name;
+            string finalDescription = !string.IsNullOrEmpty(dto.Description) ? dto.Description : paymentMethod.Description;
+
+            paymentMethod.Update(finalName, finalDescription);
         }
 
         private static PaymentMethodResponseDto MapToResponseDto(PaymentMethod response) => new()

@@ -54,7 +54,7 @@ namespace QuickBook.Application.Services
             if (product == null)
                 throw new KeyNotFoundException($"product with Id {id} not found.");
 
-            product.Update(updateProductDto.Name, updateProductDto.Price, updateProductDto.Description, updateProductDto.Quantity);
+            ApplyUpdate(product, updateProductDto);
 
             await _productRepository.UpdateAsync(product);
 
@@ -68,6 +68,16 @@ namespace QuickBook.Application.Services
 
             await _productRepository.DeleteAsync(product);
 
+        }
+
+        private void ApplyUpdate(Product product, UpdateProductDto dto)
+        {
+            string updateName = !string.IsNullOrEmpty(dto.Name) ? dto.Name : product.Name;
+            decimal updatePrice = dto.Price ?? product.Price;
+            int updateQuaility = dto.Quantity ?? product.Quantity;
+            string updateDescription = dto.Description ?? product.Description;
+
+            product.Update(updateName, updatePrice, updateDescription, updateQuaility);
         }
 
         private static ProductResponseDto MapToProductDto(Product product) => new()

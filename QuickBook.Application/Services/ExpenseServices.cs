@@ -89,8 +89,7 @@ namespace QuickBook.Application.Services
         {
             var expense = await GetByIdOrThrowError(id);
             
-
-            expense.Update(dto.Description, dto.Amount, dto.CategoryId, dto.PaymentMethodId);
+            ApplyUpdate(expense, dto);
 
             var category = await GetCategoryAsync(expense.CategoryId);
             var prayment = await GetPaymentByIdAsync(expense.PaymentMethodId);
@@ -102,6 +101,16 @@ namespace QuickBook.Application.Services
         {
             var expense = await GetByIdOrThrowError(id);
             await _expenserepository.DeleteAsync(expense);
+        }
+
+        private void ApplyUpdate(Expense expense, UpdateExpenseDto dto)
+        {
+            string finalDescription = !string.IsNullOrEmpty(dto.Description) ? dto.Description : expense.Description;
+            decimal finalAmount = dto.Amount ?? expense.Amount;
+            Guid finalCustomerId = dto.CategoryId ?? expense.CategoryId;
+            Guid finalPaymentMethod = dto.PaymentMethodId ?? expense.PaymentMethodId;
+
+            expense.Update(finalDescription, finalAmount, finalCustomerId, finalPaymentMethod);
         }
         private static ResponseExpenseDto MaptoExpenseResponse(Expense expense, Category? category, PaymentMethod? paymentMethod) => new()
         {

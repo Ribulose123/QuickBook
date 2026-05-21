@@ -4,8 +4,8 @@ namespace QuickBook.Application.Dto.CategoryDto
 {
     public class UpdateCategoryDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public AccountType AccountType { get; set; }
+        public string? Name { get; set; } = null;
+        public string? Description { get; set; } = null;
+        public AccountType? AccountType { get; set; }
     }
 }

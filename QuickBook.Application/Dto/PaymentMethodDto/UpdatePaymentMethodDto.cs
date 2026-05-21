@@ -8,7 +8,7 @@ namespace QuickBook.Application.Dto.PaymentMethodDto
 {
     public class UpdatePaymentMethodDto
     {
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Name { get; set; } = null;
+        public string? Description { get; set; } = null;
     }
 }
