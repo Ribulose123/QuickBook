@@ -46,6 +46,20 @@ namespace QuickBook.Persistence
                       .HasForeignKey(e => e.InvoiceId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Navigation(e => e.Lines)
+                .HasField("_lines")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+                entity.HasMany(e => e.Lines)
+                .WithOne()
+                .HasForeignKey(e => e.TransactionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
         }
 
         public DbSet<Invoice> Invoices { get; set; }
