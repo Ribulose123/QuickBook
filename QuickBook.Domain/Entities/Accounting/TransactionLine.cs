@@ -7,6 +7,7 @@
         public Guid AccountId { get; private set; }
         public decimal DebitAmount { get; private set; }
         public decimal CreditAmount { get; private set; }
+        public virtual Account? Account { get; private set; }
 
         private TransactionLine() { }
 

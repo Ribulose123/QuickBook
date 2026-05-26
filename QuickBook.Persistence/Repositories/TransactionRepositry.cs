@@ -16,12 +16,12 @@ namespace QuickBook.Persistence.Repositories
 
         public async Task<IEnumerable<Transaction>> GetAllAsync()
         {
-            return await _context.Transactions.Include(e => e.Lines).ToListAsync();
+            return await _context.Transactions.Include(e => e.Lines).ThenInclude(l=> l.Account).ToListAsync();
         }
 
         public async Task<Transaction?> GetByIdAsync(Guid id)
         {
-            return await _context.Transactions.Include(i => i.Lines).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Transactions.Include(i => i.Lines).ThenInclude(l => l.Account).FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task AddAsync(Transaction transaction)
@@ -31,7 +31,27 @@ namespace QuickBook.Persistence.Repositories
         }
         public async Task UpdateAsync(Transaction transaction)
         {
-             _context.Transactions.Update(transaction);
+
+            var existingLines = await _context.TransactionLines.Where(i => i.TransactionId == transaction.Id).ToListAsync();
+
+            foreach(var existingLine in existingLines)
+            {
+                var stillExisting = await _context.TransactionLines.AnyAsync(i => i.Id == existingLine.Id);
+                if (!stillExisting)
+                    _context.TransactionLines.Remove(existingLine);
+            }
+
+            foreach(var line in transaction.Lines)
+            {
+                var lineEntry = _context.Entry(line);
+
+                if(lineEntry.State == EntityState.Detached || lineEntry.State == EntityState.Modified)
+                {
+                    var lineExist = await _context.TransactionLines.AnyAsync(i => i.Id == line.Id);
+
+                    lineEntry.State = lineExist ? EntityState.Modified : EntityState.Added;
+                }
+            }
             await _context.SaveChangesAsync();
         }
 

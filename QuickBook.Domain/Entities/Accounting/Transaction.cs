@@ -29,13 +29,26 @@ namespace QuickBook.Domain.Entities.Accounting
             IsPosted = false;
         }
 
-        public void AddLine(TransactionLine line)
+        public void AddLine(Guid accountId, decimal debitAmount, decimal creditAmount)
         {
-            if (line == null)
-                throw new ArgumentNullException(nameof(line));
+           if(accountId == Guid.Empty)
+                throw new ArgumentException("AccountId is required", nameof(accountId));
+           if(IsPosted)
+                throw new InvalidOperationException("Can't add line to a posted transaction");
+
+           var line = new TransactionLine(this.Id, accountId, debitAmount, creditAmount);
             _lines.Add(line);
         }
 
+        public void RemoveLine(Guid lineId)
+        {
+            if (IsPosted)
+                throw new InvalidOperationException("Can't remove line from a posted transaction");
+            var line = _lines.FirstOrDefault(l => l.Id == lineId);
+            if (line == null)
+                throw new KeyNotFoundException($"Transaction line with id {lineId} not found");
+            _lines.Remove(line);
+        }
         public void Post()
         {
             if (IsPosted)
