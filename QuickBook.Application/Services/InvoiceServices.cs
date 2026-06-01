@@ -12,12 +12,14 @@ namespace QuickBook.Application.Services
         private readonly IInvoiceRepository _repository;
         private readonly IProductRepository _productRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IAutoPostingService _autoPostingService;
 
-        public InvoiceServices(IInvoiceRepository repository, IProductRepository productRepository, ICustomerRepository customerRepository)
+        public InvoiceServices(IInvoiceRepository repository, IProductRepository productRepository, ICustomerRepository customerRepository, IAutoPostingService autoPostingService)
         {
             _repository = repository;
             _productRepository = productRepository;
             _customerRepository = customerRepository;
+            _autoPostingService = autoPostingService;
         }
 
         private async Task<Invoice> GetByIdOrThrowError(Guid id)
@@ -97,9 +99,11 @@ namespace QuickBook.Application.Services
         public async Task<InvoiceResponseDto> RecordPaymentAsync(Guid id, RecordPaymentDto dto)
         {
             var invoice = await GetByIdOrThrowError(id);
-            var payment = new Payment(id, dto.Amount, dto.PaymentMethodId);
+            var payment = new Payment(invoice.Id, dto.Amount, dto.PaymentMethodId);
             invoice.RecordPayment(payment);
             await _repository.UpdateAsync(invoice);
+
+            await _autoPostingService.PostInvoicePaymentAsync(invoice.Id, payment.Id);
 
             var customer = await GetCustomerOrThrowError(invoice.CustomerId);
             return MaptoResponseDto(invoice, customer);

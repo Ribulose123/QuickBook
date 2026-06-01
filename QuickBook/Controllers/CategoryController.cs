@@ -40,6 +40,13 @@ namespace QuickBook.Controllers
             return Ok(result);
         }
 
+        [HttpPatch("{id}/link-account")]
+        public async Task<IActionResult> LinkAccount(Guid id, [FromBody] Guid accountId)
+        {
+            var result = await _services.LinkAccountAsync(id, accountId);
+            return Ok(result);
+        }
+
         [HttpPatch ("{id}")]
 
         public async Task<IActionResult> UpadateCategory(Guid id, [FromBody] UpdateCategoryDto category)

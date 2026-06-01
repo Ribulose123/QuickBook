@@ -15,11 +15,13 @@ namespace QuickBook.Application.Services
         private readonly IExpensesRepository _expenserepository;
         private readonly IPaymentMethodRepository _paymentMethodRepository;
         private readonly ICategoryRepository _categoryRepository;
-        public ExpenseServices(IExpensesRepository expensesRepository, IPaymentMethodRepository paymentMethodRepository,  ICategoryRepository categoryRepository)
+        private readonly IAutoPostingService _autoPostingService;
+        public ExpenseServices(IExpensesRepository expensesRepository, IPaymentMethodRepository paymentMethodRepository,  ICategoryRepository categoryRepository, IAutoPostingService autoPostingService)
         {
              _expenserepository = expensesRepository;
             _paymentMethodRepository = paymentMethodRepository;
             _categoryRepository = categoryRepository;
+            _autoPostingService = autoPostingService;
         }
 
         private async Task<Expense> GetByIdOrThrowError(Guid id)
@@ -79,6 +81,7 @@ namespace QuickBook.Application.Services
             var expense = new Expense(dto.Description, dto.Amount, dto.CategoryId, dto.PaymentMethodId);
             
             await _expenserepository.AddAsync(expense);
+            await _autoPostingService.PostExpenseAsync(expense.Id);
             var catergory = await GetCategoryAsync(expense.CategoryId);
             var paymentMethod = await GetPaymentByIdAsync(expense.PaymentMethodId);
             return MaptoExpenseResponse(expense, catergory, paymentMethod);
