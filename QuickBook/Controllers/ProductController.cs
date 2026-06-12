@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.CustomerDto;
 using QuickBook.Application.Dto.ProductDto;
 using QuickBook.Application.Interface;
+using QuickBook.Middleware;
 
 namespace QuickBook.Controllers
 {
@@ -11,15 +13,18 @@ namespace QuickBook.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productServices;
+        private readonly IValidator<CreateProductDto> _createValidator;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IValidator<CreateProductDto> createValidator)
         {
             _productServices = productService;
+            _createValidator = createValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto createProductDto)
         {
+            await ValidationHelper.ValidateAsync(_createValidator, createProductDto);
             var result = await _productServices.CreateProductAsync(createProductDto);
             return CreatedAtAction(nameof(GetbyId), new { id = result.Id }, result);
         }

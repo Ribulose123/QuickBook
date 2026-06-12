@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.CategoryDto;
 using QuickBook.Application.Interface;
+using QuickBook.Middleware;
 
 namespace QuickBook.Controllers
 {
@@ -10,15 +12,18 @@ namespace QuickBook.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryServices _services;
+        private readonly IValidator<CreateCategoryDto> _createValidator;
 
-        public CategoryController(ICategoryServices services)
+        public CategoryController(ICategoryServices services, IValidator<CreateCategoryDto> createValidator)
         {
             _services = services;
+            _createValidator = createValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCategoryAsync( [FromBody] CreateCategoryDto createCategoryDto)
         {
+            await ValidationHelper.ValidateAsync(_createValidator, createCategoryDto);
             var result = await _services.CreateCategoryAsync(createCategoryDto);
             return CreatedAtAction(nameof(GetCategoryById), new {id = result.Id}, result);
         }

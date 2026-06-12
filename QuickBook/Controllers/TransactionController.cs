@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Interface;
 using QuickBook.Application.Dto.Transaction;
+using FluentValidation;
+using QuickBook.Middleware;
 
 namespace QuickBook.Controllers
 {
@@ -10,9 +12,13 @@ namespace QuickBook.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionServices _transactionServices;
-        public TransactionController(ITransactionServices transactionServices)
+        private readonly IValidator<CreateTransactionDto> _transactionValidator;
+        private readonly IValidator<AddTransactionLineDto> _lineValidator;
+        public TransactionController(ITransactionServices transactionServices, IValidator<AddTransactionLineDto> lineValidator, IValidator<CreateTransactionDto> transactionValidator)
         {
             _transactionServices = transactionServices;
+            _lineValidator = lineValidator;
+            _transactionValidator = transactionValidator;
         }
 
         [HttpGet]
@@ -33,6 +39,7 @@ namespace QuickBook.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionDto dto)
         {
+            await ValidationHelper.ValidateAsync(_transactionValidator, dto);
             var transaction = await _transactionServices.CreateTransactionAsync(dto);
             return CreatedAtAction(nameof(GetTransactionById), new { id = transaction.Id }, transaction);
         }
@@ -41,6 +48,7 @@ namespace QuickBook.Controllers
         [HttpPost ("{id}/line")]
         public async Task<IActionResult> AddLineToTransaction(Guid id, [FromBody] AddTransactionLineDto dto)
         {
+            await ValidationHelper.ValidateAsync(_lineValidator, dto);
             var transaction = await _transactionServices.AddLineToTransactionAsync(id, dto);
             return Ok(transaction);
         }

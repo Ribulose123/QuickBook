@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.CustomerDto;
 using QuickBook.Application.Interface;
+using QuickBook.Middleware;
 
 namespace QuickBook.Controllers
 {
@@ -10,15 +12,18 @@ namespace QuickBook.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerServices _customerService;
+        private readonly IValidator<CreateCustomerDto> _createValidator;
 
-        public CustomerController(ICustomerServices customerService)
+        public CustomerController(ICustomerServices customerService, IValidator<CreateCustomerDto> createValidator)
         {
             _customerService = customerService;
+            _createValidator = createValidator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+
             var customers = await _customerService.GetAllCustomerAsync();
             return Ok(customers);
         }
@@ -35,6 +40,7 @@ namespace QuickBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCustomerDto dto)
         {
+            await ValidationHelper.ValidateAsync(_createValidator, dto);
             var customer = await _customerService.CreateCustomerAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
         }

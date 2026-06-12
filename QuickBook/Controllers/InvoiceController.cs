@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.InvoiceDto;
 using QuickBook.Application.Interface;
+using QuickBook.Middleware;
 
 namespace QuickBook.Controllers
 {
@@ -9,10 +11,16 @@ namespace QuickBook.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
+        private readonly IValidator<CreateInvoiceDto> _createValidator;
+        private readonly IValidator<AddInvoiceItemDto> _addItemValidator;
+        private readonly IValidator<RecordPaymentDto> _recordPaymentValidator;
 
-        public InvoiceController(IInvoiceService invoiceService)
+        public InvoiceController(IInvoiceService invoiceService, IValidator<CreateInvoiceDto> createValidator, IValidator<AddInvoiceItemDto> addItemValidator, IValidator<RecordPaymentDto> recordPaymentValidator)
         {
             _invoiceService = invoiceService;
+            _createValidator = createValidator;
+            _addItemValidator = addItemValidator;
+            _recordPaymentValidator = recordPaymentValidator;
         }
 
         [HttpGet]
@@ -34,6 +42,7 @@ namespace QuickBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateInvoiceDto dto)
         {
+            await ValidationHelper.ValidateAsync(_createValidator, dto);
             var result = await _invoiceService.CreateInvoiceAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
@@ -41,6 +50,7 @@ namespace QuickBook.Controllers
         [HttpPost("{id}/items")]
         public async Task<IActionResult> AddItem(Guid id, [FromBody] AddInvoiceItemDto dto)
         {
+            await ValidationHelper.ValidateAsync(_addItemValidator, dto);
             var result = await _invoiceService.AddItemToInvoiceAsync(id, dto);
             return Ok(result);
         }
@@ -55,6 +65,7 @@ namespace QuickBook.Controllers
         [HttpPost("{id}/payments")]
         public async Task<IActionResult> RecordPayment(Guid id, [FromBody] RecordPaymentDto dto)
         {
+            await ValidationHelper.ValidateAsync(_recordPaymentValidator, dto);
             var result = await _invoiceService.RecordPaymentAsync(id, dto);
             return Ok(result);
         }

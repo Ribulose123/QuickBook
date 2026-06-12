@@ -1,22 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.AccountDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Enums;
+using QuickBook.Middleware;
 
 [Route("api/[controller]")]
 [ApiController]
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _services;
+    private readonly IValidator<CreateAccountDto> _createValidator;
 
-    public AccountController(IAccountService service)
+    public AccountController(IAccountService service, IValidator<CreateAccountDto> createValidator)
     {
         _services = service;
+        _createValidator = createValidator;
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] CreateAccountDto dto)
     {
+        await ValidationHelper.ValidateAsync(_createValidator, dto);
         var result = await _services.CreateAccountAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
