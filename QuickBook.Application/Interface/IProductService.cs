@@ -2,7 +2,7 @@
 
 using QuickBook.Application.Dto;
 using QuickBook.Application.Dto.ProductDto;
-
+using QuickBook.Domain.Common;
 namespace QuickBook.Application.Interface
 {
     public interface IProductService

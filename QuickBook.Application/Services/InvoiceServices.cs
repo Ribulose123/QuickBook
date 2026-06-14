@@ -5,6 +5,7 @@ using QuickBook.Application.Dto.InvoiceDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
 using QuickBook.Domain.Interface;
+using QuickBook.Domain.Common;
 
 namespace QuickBook.Application.Services
 {

@@ -3,6 +3,7 @@ using QuickBook.Application.Dto.Expenses;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
 using QuickBook.Domain.Interface;
+using QuickBook.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

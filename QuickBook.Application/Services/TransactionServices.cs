@@ -3,6 +3,7 @@ using QuickBook.Application.Interface;
 using QuickBook.Application.Dto;
 using QuickBook.Domain.Entities.Accounting;
 using QuickBook.Domain.Interface;
+using QuickBook.Domain.Common;
 
 namespace QuickBook.Application.Services
 {

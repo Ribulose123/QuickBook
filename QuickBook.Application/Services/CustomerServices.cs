@@ -3,6 +3,7 @@ using QuickBook.Application.Dto.CustomerDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
 using QuickBook.Domain.Interface;
+using QuickBook.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace QuickBook.Application.Services
 
         public async Task<PagedResult<CustomerResponseDto>> GetAllCustomerAsync(PaginationParams paginationParams)
         {
-            var (item, totalCount) = await _iCustomerRepo.GetAllAsync(paginationParams.PageNumber, paginationParams.PageSize);
+            var (item, totalCount) = await _iCustomerRepo.GetAllAsync(paginationParams);
            
 
             return new PagedResult<CustomerResponseDto>

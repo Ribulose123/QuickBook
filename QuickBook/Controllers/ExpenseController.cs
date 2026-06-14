@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.Expenses;
-using QuickBook.Application.Dto;
+using QuickBook.Domain.Common;
 using QuickBook.Application.Interface;
 using QuickBook.Middleware;
 

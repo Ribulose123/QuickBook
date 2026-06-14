@@ -1,5 +1,5 @@
 ﻿using QuickBook.Application.Dto;
-using QuickBook.Application.Dto.Expenses;
+using QuickBook.Domain.Common;
 using QuickBook.Application.Dto.Transaction;
 using System;
 using System.Collections.Generic;

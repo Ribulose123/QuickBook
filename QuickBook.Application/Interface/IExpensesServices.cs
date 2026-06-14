@@ -1,6 +1,6 @@
 ﻿using QuickBook.Application.Dto;
 using QuickBook.Application.Dto.Expenses;
-using QuickBook.Domain.Entities.Operational;
+using QuickBook.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Interface;
-using QuickBook.Application.Dto;
+using QuickBook.Domain.Common;
 using QuickBook.Application.Dto.Transaction;
 using FluentValidation;
 using QuickBook.Middleware;

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using QuickBook.Application.Dto;
+using QuickBook.Domain.Common;
 using QuickBook.Application.Dto.InvoiceDto;
 using QuickBook.Application.Interface;
 using QuickBook.Middleware;
