@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuickBook.Domain.Entities.Accounting;
 using QuickBook.Domain.Entities.Operational;
+using QuickBook.Domain.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,5 +76,8 @@ namespace QuickBook.Persistence
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionLine> TransactionLines { get; set; }
         public DbSet <Account> Accounts { get; set; }
+
+        //User
+        public DbSet<User> Users { get; set; }
     }
 }
