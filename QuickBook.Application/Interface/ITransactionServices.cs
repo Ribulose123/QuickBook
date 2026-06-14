@@ -1,4 +1,5 @@
-﻿using QuickBook.Application.Dto.Expenses;
+﻿using QuickBook.Application.Dto;
+using QuickBook.Application.Dto.Expenses;
 using QuickBook.Application.Dto.Transaction;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace QuickBook.Application.Interface
 {
     public interface ITransactionServices
     {
-        Task<IEnumerable<TransactionResponseDto>> GetTransactionAllAsync();
+        Task<PagedResult<TransactionResponseDto>> GetTransactionAllAsync(PaginationParams pagination);
         Task<TransactionResponseDto> GetTransactionByIdAsync(Guid id);
         Task<TransactionResponseDto> CreateTransactionAsync(CreateTransactionDto dto);
         Task<TransactionResponseDto> AddLineToTransactionAsync(Guid id, AddTransactionLineDto dto);

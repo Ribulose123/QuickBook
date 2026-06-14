@@ -1,4 +1,5 @@
-﻿using QuickBook.Application.Dto.Expenses;
+﻿using QuickBook.Application.Dto;
+using QuickBook.Application.Dto.Expenses;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
 using QuickBook.Domain.Interface;
@@ -52,18 +53,25 @@ namespace QuickBook.Application.Services
         }
 
 
-        public async Task<IEnumerable<ResponseExpenseDto>> GetAllExpensesAsync()
+        public async Task<PagedResult<ResponseExpenseDto>> GetAllExpensesAsync(PaginationParams pagination)
         {
-            var expenses = await _expenserepository.GetAllAsync();
-            var catategories = await _categoryRepository.GetAllAsync();
-            var paymetMethods = await _paymentMethodRepository.GetAllAsync();
-            return expenses.Select( expense =>
-            {
-                var category = catategories.FirstOrDefault(i => i.Id == expense.CategoryId);
-                var paymentMethod = paymetMethods.FirstOrDefault(i => i.Id == expense.PaymentMethodId);
+            var (expenses, totalCount) = await _expenserepository.GetAllAsync(pagination.PageNumber, pagination.PageSize);
 
-                return MaptoExpenseResponse(expense, category, paymentMethod);
-            });
+            var item = new List<ResponseExpenseDto>();
+
+            foreach (var expense in expenses)
+            {
+                var categories = await _categoryRepository.GetByIdAsync(expense.CategoryId);
+                var paymentMehtod = await _paymentMethodRepository.GetAllByIdAsync(expense.PaymentMethodId);
+               item.Add(MaptoExpenseResponse(expense, categories, paymentMehtod));
+            }
+            return new PagedResult<ResponseExpenseDto>
+            {
+                Items = item,
+                TotalCount = totalCount,
+                PageNumber = pagination.PageNumber,
+                PageSize = pagination.PageSize
+            };
         }
 
 

@@ -1,4 +1,5 @@
-﻿using QuickBook.Application.Dto.Expenses;
+﻿using QuickBook.Application.Dto;
+using QuickBook.Application.Dto.Expenses;
 using QuickBook.Domain.Entities.Operational;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace QuickBook.Application.Interface
 {
     public interface IExpensesServices
     {
-        Task<IEnumerable<ResponseExpenseDto>> GetAllExpensesAsync();
+        Task<PagedResult<ResponseExpenseDto>> GetAllExpensesAsync(PaginationParams pagination);
         Task<ResponseExpenseDto> GetExpenseByIdAsync(Guid id);
         Task<ResponseExpenseDto> CreateExpenseAsync(CreateExpensesDto dto);
         Task<ResponseExpenseDto> UpdateExpenseAsync(Guid id, UpdateExpenseDto dto);

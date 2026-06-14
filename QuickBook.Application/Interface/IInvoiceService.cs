@@ -1,4 +1,5 @@
-﻿using QuickBook.Application.Dto.InvoiceDto;
+﻿using QuickBook.Application.Dto;
+using QuickBook.Application.Dto.InvoiceDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace QuickBook.Application.Interface
 {
     public interface IInvoiceService
     {
-        Task<IEnumerable<InvoiceResponseDto>> GetAllInvoiceAsync();
+        Task<PagedResult<InvoiceResponseDto>> GetAllInvoiceAsync(PaginationParams pagination);
         Task<InvoiceResponseDto> GetInvoiceByIdAsync(Guid id);
         Task<InvoiceResponseDto> CreateInvoiceAsync(CreateInvoiceDto dto);
         Task<InvoiceResponseDto> AddItemToInvoiceAsync(Guid id, AddInvoiceItemDto dto);

@@ -1,5 +1,6 @@
 ﻿
 
+using QuickBook.Application.Dto;
 using QuickBook.Application.Dto.ProductDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
@@ -25,10 +26,17 @@ namespace QuickBook.Application.Services
 
             return product;
         }
-        public async Task<IEnumerable<ProductResponseDto>> GetAllProductAsync()
+        public async Task<PagedResult<ProductResponseDto>> GetAllProductAsync(PaginationParams pagination)
         {
-            var product = await _productRepository.GetAllAsync();
-            return product.Select(MapToProductDto);
+            var (products, totalCount) = await _productRepository.GetAllAsync(pagination.PageNumber, pagination.PageSize);
+
+            return new PagedResult<ProductResponseDto>
+            {
+                Items = products.Select(MapToProductDto).ToList(),
+                TotalCount =totalCount,
+                PageNumber = pagination.PageNumber,
+                PageSize =pagination._pageSize
+            };
         }
 
         public async Task<ProductResponseDto> GetProductByIdAsync(Guid id)

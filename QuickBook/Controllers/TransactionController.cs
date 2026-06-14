@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Interface;
+using QuickBook.Application.Dto;
 using QuickBook.Application.Dto.Transaction;
 using FluentValidation;
 using QuickBook.Middleware;
@@ -22,9 +23,9 @@ namespace QuickBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTransactions()
+        public async Task<IActionResult> GetAllTransactions([FromQuery] PaginationParams pagination)
         {
-            var transactions = await _transactionServices.GetTransactionAllAsync();
+            var transactions = await _transactionServices.GetTransactionAllAsync(pagination);
             return Ok(transactions);
         }
 

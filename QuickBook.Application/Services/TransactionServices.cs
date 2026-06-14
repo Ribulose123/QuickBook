@@ -1,5 +1,6 @@
 ﻿using QuickBook.Application.Dto.Transaction;
 using QuickBook.Application.Interface;
+using QuickBook.Application.Dto;
 using QuickBook.Domain.Entities.Accounting;
 using QuickBook.Domain.Interface;
 
@@ -23,10 +24,16 @@ namespace QuickBook.Application.Services
                 throw new KeyNotFoundException($"Transaction with {id} not found");
             return transaction;
         }
-        public async Task<IEnumerable<TransactionResponseDto>> GetTransactionAllAsync()
+        public async Task<PagedResult<TransactionResponseDto>> GetTransactionAllAsync(PaginationParams pagination)
         {
-            var transactions = await _transactionRepository.GetAllAsync();
-            return transactions.Select(MapToResponses);
+            var (transactions, totalCounts) = await _transactionRepository.GetAllAsync(pagination.PageNumber, pagination.PageSize);
+            return new PagedResult<TransactionResponseDto>
+            {
+                Items = transactions.Select(MapToResponses).ToList(),
+                TotalCount = totalCounts,
+                PageNumber = pagination.PageNumber,
+                PageSize = pagination.PageSize
+            };
         }
 
         public async Task<TransactionResponseDto> GetTransactionByIdAsync(Guid id)

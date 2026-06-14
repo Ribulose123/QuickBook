@@ -15,9 +15,13 @@ namespace QuickBook.Persistence.Repositories
             _context  = context;
         }
 
-        public async Task<IEnumerable<Expense>> GetAllAsync()
+        public async Task<(IEnumerable<Expense> Expenses, int TotalCount)> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Expenses.ToListAsync();
+            var totalCount = await _context.Expenses.CountAsync();
+            var items = await _context.Expenses.OrderBy(x => x.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+
+            return (items, totalCount);
         }
         public async Task<Expense?> GetByIdAsync(Guid id)
         {

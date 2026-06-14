@@ -1,5 +1,6 @@
 ﻿
 
+using QuickBook.Application.Dto;
 using QuickBook.Application.Dto.InvoiceDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
@@ -40,17 +41,27 @@ namespace QuickBook.Application.Services
         }
 
 
-        public async Task<IEnumerable<InvoiceResponseDto>> GetAllInvoiceAsync()
+        public async Task<PagedResult<InvoiceResponseDto>> GetAllInvoiceAsync(PaginationParams pagination)
         {
-            var invoices = await _repository.GetAllAsync();
-            var customers = await _customerRepository.GetAllAsync();
+            var (invoices, totalCount) = await _repository.GetAllAsync(pagination.PageNumber, pagination.PageSize);
+            
+            var item = new List<InvoiceResponseDto>();
 
-            return invoices.Select( invoice =>
+            foreach(var invoice in invoices)
             {
-                var customer = customers.FirstOrDefault(c => c.Id == invoice.CustomerId);
+                var customer = await _customerRepository.GetByIdAsync(invoice.CustomerId);
+                item.Add(MaptoResponseDto(invoice, customer));
+            }
 
-                return MaptoResponseDto(invoice, customer);
-            } );
+            return new PagedResult<InvoiceResponseDto>
+            {
+                Items = item,
+                TotalCount = totalCount,
+                PageNumber = pagination.PageNumber,
+                PageSize = pagination._pageSize
+            };
+
+           
         }
 
         public async Task<InvoiceResponseDto> GetInvoiceByIdAsync(Guid id)

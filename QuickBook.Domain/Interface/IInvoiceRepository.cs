@@ -9,7 +9,7 @@ namespace QuickBook.Domain.Interface
 {
     public interface IInvoiceRepository
     {
-        Task<IEnumerable<Invoice>> GetAllAsync();
+        Task<(IEnumerable<Invoice>, int TotalCount)> GetAllAsync(int pageNumber, int pageSize);
         Task<Invoice?> GetByIdAsync(Guid id);
         Task AddAsync(Invoice invoice);
         Task UpdateAsync(Invoice invoice);

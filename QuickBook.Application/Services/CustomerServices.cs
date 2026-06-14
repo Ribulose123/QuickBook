@@ -1,4 +1,5 @@
-﻿using QuickBook.Application.Dto.CustomerDto;
+﻿using QuickBook.Application.Dto;
+using QuickBook.Application.Dto.CustomerDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Operational;
 using QuickBook.Domain.Interface;
@@ -19,17 +20,26 @@ namespace QuickBook.Application.Services
             _iCustomerRepo = icustomerRepo;
         }
 
-        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomerAsync()
+        public async Task<PagedResult<CustomerResponseDto>> GetAllCustomerAsync(PaginationParams paginationParams)
         {
-            var customers = await _iCustomerRepo.GetAllAsync();
-            return customers.Select(c => new CustomerResponseDto
+            var (item, totalCount) = await _iCustomerRepo.GetAllAsync(paginationParams.PageNumber, paginationParams.PageSize);
+           
+
+            return new PagedResult<CustomerResponseDto>
             {
-                Id = c.Id,
-                Name = c.Name,
-                Email = c.Email,
-                Address = c.Address,
-                Phone = c.Phone
-            });
+                Items = item.Select(c => new CustomerResponseDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Email = c.Email,
+                    Address = c.Address,
+                    Phone = c.Phone
+                }).ToList(),
+                TotalCount = totalCount,
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+
+            };
         }
 
         public async Task<CustomerResponseDto?> GetCustomerByIdAsync(Guid id)

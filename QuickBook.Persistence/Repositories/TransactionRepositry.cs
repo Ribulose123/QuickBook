@@ -14,9 +14,11 @@ namespace QuickBook.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Transaction>> GetAllAsync()
+        public async Task<(IEnumerable<Transaction> Transactions, int TotalCount)> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Transactions.Include(e => e.Lines).ThenInclude(l=> l.Account).ToListAsync();
+            var totalcount = await _context.Transactions.CountAsync();
+            var items = await _context.Transactions.Include(x => x.Lines).ThenInclude(i => i.Account).OrderBy(x => x.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            return (items, totalcount);
         }
 
         public async Task<Transaction?> GetByIdAsync(Guid id)
