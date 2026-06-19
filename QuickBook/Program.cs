@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickBook.Application.Interface;
 using QuickBook.Application.Services;
 using QuickBook.Domain.Interface;
+using QuickBook.Helper1;
 using QuickBook.Middleware;
 using QuickBook.Persistence;
 using QuickBook.Persistence.Repositories;
@@ -29,6 +30,9 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepositry>();
 builder.Services.AddScoped<ITransactionServices, TransactionServices>();
 builder.Services.AddScoped<IAutoPostingService, AutoPostingService>();
 builder.Services.AddScoped<IReportService, ReportServices>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // Input validation 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCustomerValidator>();
