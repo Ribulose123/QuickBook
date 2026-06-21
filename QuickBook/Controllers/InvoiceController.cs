@@ -4,9 +4,11 @@ using QuickBook.Domain.Common;
 using QuickBook.Application.Dto.InvoiceDto;
 using QuickBook.Application.Interface;
 using QuickBook.Middleware;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuickBook.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class InvoiceController : ControllerBase

@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.AccountDto;
 using QuickBook.Application.Interface;
 using QuickBook.Domain.Enums;
 using QuickBook.Middleware;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class AccountController : ControllerBase

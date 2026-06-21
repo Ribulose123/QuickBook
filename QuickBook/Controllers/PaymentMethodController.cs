@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuickBook.Application.Dto.PaymentMethodDto;
 using QuickBook.Application.Interface;
 
 namespace QuickBook.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentMethodController : ControllerBase
