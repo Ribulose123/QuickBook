@@ -63,6 +63,7 @@ namespace QuickBook.Controllers
             return Ok(transaction);
         }
 
+        [Authorize(Roles ="Admin")]
 
         [HttpDelete("{id}/line/{lineId}")]
         public async Task<IActionResult> RemoveLine(Guid id, Guid lineId)

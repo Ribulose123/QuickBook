@@ -28,6 +28,7 @@ public class AccountController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
+    [Authorize(Roles = "Accountant")]
     [HttpGet]
     public async Task<IActionResult> GetAllAsync()
     {

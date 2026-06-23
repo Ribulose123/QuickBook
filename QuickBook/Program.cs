@@ -11,6 +11,7 @@ using QuickBook.Persistence;
 using QuickBook.Persistence.Repositories;
 using QuickBook.Validators.Customer;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,7 +100,39 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSetting["Issuer"],
         ValidAudience = jwtSetting["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
+        ValidAlgorithms = new[] {SecurityAlgorithms.HmacSha256},
+        RequireExpirationTime = true,
+        ClockSkew = TimeSpan.Zero
+    }; 
+    option.Events = new JwtBearerEvents
+    {
+        OnChallenge = async context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                status = 401,
+                message = "Unauthorized access. Please provide a valid token."
+            };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+        },
+        OnForbidden = async context =>
+        {
+            context.Response.StatusCode = 403;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                status = 403,
+                message = "You do not have permission to perform this action."
+            };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
+        }
+
     };
 });
 
