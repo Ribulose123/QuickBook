@@ -48,10 +48,25 @@ namespace QuickBook.Application.Services
             if (user == null)
                 throw new ArgumentException("Invalid email or password");
 
+            if (user.IsLocked())
+                throw new UnauthorizedAccessException("Account is temporarily on locked");
+
+
             bool password = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
+           
+
             if(!password)
+            {
+                user.RecordFailedLoginAttempt();
+
+                await _userRepository.UpdateAsync(user);
+
                 throw new ArgumentException("Invalid email or password");
+            }
+
+            user.ResetFailedLoginAttempts();
+            await _userRepository.UpdateAsync(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user, out DateTime expiresAt);
 

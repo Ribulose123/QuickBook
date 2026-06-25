@@ -9,6 +9,8 @@ namespace QuickBook.Domain.Entities.Users
         public string Email { get; private set; } = string.Empty;
         public string PasswordHash { get; private set; } = string.Empty;
         public UserRole Role { get; private set; }
+        public int FailedLoginAttempts { get; private set; }
+        public DateTime? LockOutEnd { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime LastUpdated { get; private set; }
 
@@ -45,6 +47,30 @@ namespace QuickBook.Domain.Entities.Users
         {
             Role = role;
             LastUpdated = DateTime.UtcNow;
+        }
+
+        public void RecordFailedLoginAttempt()
+        {
+            FailedLoginAttempts++;
+
+            if(FailedLoginAttempts >= 2)
+            {
+                LockOutEnd = DateTime.UtcNow.AddMinutes(2);
+            }
+
+            LastUpdated = DateTime.UtcNow;
+        }
+
+        public void ResetFailedLoginAttempts()
+        {
+            FailedLoginAttempts = 0;
+            LockOutEnd = null;
+            LastUpdated = DateTime.UtcNow;
+        }
+
+        public bool IsLocked()
+        {
+            return LockOutEnd.HasValue && LockOutEnd.Value > DateTime.UtcNow;
         }
     }
 }

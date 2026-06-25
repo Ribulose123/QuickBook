@@ -13,5 +13,6 @@ namespace QuickBook.Domain.Interface
         Task<User?> GetByUserNameAsync(string name);
         Task<User?> GetByIdAsync(Guid id);
         Task AddAsync(User user);
+        Task UpdateAsync(User user);
     }
 }

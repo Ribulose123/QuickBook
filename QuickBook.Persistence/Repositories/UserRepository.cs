@@ -38,5 +38,11 @@ namespace QuickBook.Persistence.Repositories
             await _context.AddAsync(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(User user)
+        {
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }
