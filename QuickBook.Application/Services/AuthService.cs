@@ -49,7 +49,11 @@ namespace QuickBook.Application.Services
                 throw new ArgumentException("Invalid email or password");
 
             if (user.IsLocked())
-                throw new UnauthorizedAccessException("Account is temporarily on locked");
+            {
+                var remainingLockTime = (user.LockOutEnd!.Value - DateTime.UtcNow).Minutes;
+
+                throw new ArgumentException($"Account is locked: try again {remainingLockTime} minutes");
+            }
 
 
             bool password = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);

@@ -53,9 +53,9 @@ namespace QuickBook.Domain.Entities.Users
         {
             FailedLoginAttempts++;
 
-            if(FailedLoginAttempts >= 2)
+            if(FailedLoginAttempts >= 5)
             {
-                LockOutEnd = DateTime.UtcNow.AddMinutes(2);
+                LockOutEnd = DateTime.UtcNow.AddMinutes(15);
             }
 
             LastUpdated = DateTime.UtcNow;
