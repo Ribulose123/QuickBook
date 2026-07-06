@@ -11,6 +11,8 @@ namespace QuickBook.Domain.Entities.Users
         public UserRole Role { get; private set; }
         public int FailedLoginAttempts { get; private set; }
         public DateTime? LockOutEnd { get; private set; }
+        public string? RefreshToken { get; private set; }
+        public DateTime? RefreshTokenExpiryTime { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime LastUpdated { get; private set; }
 
@@ -71,6 +73,20 @@ namespace QuickBook.Domain.Entities.Users
         public bool IsLocked()
         {
             return LockOutEnd.HasValue && LockOutEnd.Value > DateTime.UtcNow;
+        }
+
+        public void SetRefreshToken(string refreshToken, DateTime expiry)
+        {
+            RefreshToken = refreshToken;
+            RefreshTokenExpiryTime = expiry;
+            LastUpdated = DateTime.UtcNow;
+        }
+
+        public void RemoveRefreshToken()
+        {
+            RefreshToken = null;
+            RefreshTokenExpiryTime = null;
+            LastUpdated = DateTime.UtcNow;
         }
     }
 }

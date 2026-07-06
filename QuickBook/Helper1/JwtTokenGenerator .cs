@@ -2,6 +2,7 @@
 using QuickBook.Domain.Entities.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace QuickBook.Helper1
@@ -47,5 +48,7 @@ namespace QuickBook.Helper1
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        
     }
 }

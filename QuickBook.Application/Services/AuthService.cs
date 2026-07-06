@@ -5,6 +5,7 @@ using QuickBook.Application.Interface;
 using QuickBook.Domain.Entities.Users;
 using QuickBook.Domain.Interface;
 using QuickBook.Helper1;
+using System.Security.Cryptography;
 
 namespace QuickBook.Application.Services
 {
@@ -73,14 +74,56 @@ namespace QuickBook.Application.Services
             await _userRepository.UpdateAsync(user);
 
             var token = _jwtTokenGenerator.GenerateToken(user, out DateTime expiresAt);
+            var refreshToken = GenerateToken();
+
+            user.SetRefreshToken(refreshToken, DateTime.UtcNow.AddDays(7));
 
             return new AuthResponseDto
             {
                 Token = token,
+                RefreshToken = refreshToken,
                 UserName = user.UserName,
                 Email = user.Email,
                 Role = user.Role,
             };
+        }
+
+       public  async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken)
+        {
+            var user = await _userRepository.GetByRefreshTokenAsync(refreshToken);
+
+            if (user == null)
+                throw new ArgumentException("Invalid refresh token");
+
+            if (user.RefreshTokenExpiryTime == null  || user.RefreshTokenExpiryTime < DateTime.UtcNow)
+                throw new ArgumentException("Expired token");
+
+            var newAccessToken = _jwtTokenGenerator.GenerateToken(user, out DateTime expiresAt);
+            var newRefreshToken = GenerateToken();
+
+            user.SetRefreshToken(newRefreshToken, DateTime.UtcNow.AddDays(7));
+            await _userRepository.UpdateAsync(user);
+
+            return new AuthResponseDto
+            {
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken,
+                UserName = user.UserName,
+                Email = user.Email,
+                Role = user.Role,
+            };
+
+        }
+
+        public async Task LogoutAsync(string refreshToken)
+        {
+            var user = await _userRepository.GetByRefreshTokenAsync(refreshToken);
+
+            if (user == null)
+                throw new ArgumentException("Invalid token");
+
+            user.RemoveRefreshToken();
+            await _userRepository.UpdateAsync(user);
         }
 
         private static RegisterReponsesDto MaptoResponses(User user) => new()
@@ -90,5 +133,14 @@ namespace QuickBook.Application.Services
             UserName = user.UserName,
             Role = user.Role,
         };
+
+       
+
+        public static string GenerateToken(int size = 64)
+        {
+            var randomByte = RandomNumberGenerator.GetBytes(size);
+
+            return Convert.ToBase64String(randomByte).Replace("+", "-").Replace("/", "_").Replace("=", "");
+        }
     }
 }

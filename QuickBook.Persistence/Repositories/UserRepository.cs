@@ -44,5 +44,10 @@ namespace QuickBook.Persistence.Repositories
             _context.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
+        {
+            return await _context.Users.FirstOrDefaultAsync(i => i.RefreshToken == refreshToken);
+        }
     }
 }
